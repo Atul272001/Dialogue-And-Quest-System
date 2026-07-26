@@ -14,5 +14,5 @@ public:
 	FText SpeakerName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
-	FText DailogueText;
+	FText DialogueText;
 };

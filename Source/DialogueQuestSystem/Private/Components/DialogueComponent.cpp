@@ -13,6 +13,19 @@ UDialogueComponent::UDialogueComponent()
 	// ...
 }
 
+void UDialogueComponent::Interact()
+{
+	if (!bIsDialogueActive)
+	{
+		StartDialogue();
+	}
+	else
+	{
+		NextDialogue();
+	}
+	UE_LOG(LogTemp, Log, TEXT("Interacted"));
+}
+
 void UDialogueComponent::StartDialogue()
 {
 	if (!DialogueData || DialogueData->DialogueLines.IsEmpty())
@@ -20,6 +33,10 @@ void UDialogueComponent::StartDialogue()
 
 	CurrentDialogueIndex = 0;
 	bIsDialogueActive = true;
+
+	OnDialogueStarted.Broadcast();
+
+	OnDialogueLineChanged.Broadcast(DialogueData->DialogueLines[CurrentDialogueIndex]);
 }
 
 void UDialogueComponent::NextDialogue()
@@ -29,17 +46,24 @@ void UDialogueComponent::NextDialogue()
 
 	++CurrentDialogueIndex;
 
-	if (DialogueData->DialogueLines.IsValidIndex(CurrentDialogueIndex))
+	if (!DialogueData->DialogueLines.IsValidIndex(CurrentDialogueIndex))
+	{
 		EndDialogue();
+		return;
+	}
+
+	OnDialogueLineChanged.Broadcast(DialogueData->DialogueLines[CurrentDialogueIndex]);
 }
 
 void UDialogueComponent::EndDialogue()
 {
 	bIsDialogueActive = false;
 	CurrentDialogueIndex = 0;
+
+	OnDialogueEnded.Broadcast();
 }
 
-const FDialogueLine* UDialogueComponent::GetCurrentDialogue() const
+const FDialogueLine* UDialogueComponent::GetCurrentDialogueLine() const
 {
 	if (!DialogueData)
 		return nullptr;
