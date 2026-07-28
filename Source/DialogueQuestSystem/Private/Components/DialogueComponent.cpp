@@ -23,7 +23,6 @@ void UDialogueComponent::Interact()
 	{
 		NextDialogue();
 	}
-	UE_LOG(LogTemp, Log, TEXT("Interacted"));
 }
 
 void UDialogueComponent::StartDialogue()
@@ -35,7 +34,6 @@ void UDialogueComponent::StartDialogue()
 	bIsDialogueActive = true;
 
 	OnDialogueStarted.Broadcast();
-
 	OnDialogueLineChanged.Broadcast(DialogueData->DialogueLines[CurrentDialogueIndex]);
 }
 
@@ -51,7 +49,6 @@ void UDialogueComponent::NextDialogue()
 		EndDialogue();
 		return;
 	}
-
 	OnDialogueLineChanged.Broadcast(DialogueData->DialogueLines[CurrentDialogueIndex]);
 }
 
